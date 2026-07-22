@@ -1,0 +1,90 @@
+{
+  "version": "1.0",
+  "description": "External business metadata for the HR source database. Enriches the semantic layer with information that does not exist in the physical database (PII flags, sensitivity, units, business glossary) and defines derived (calculated) fields.",
+  "tables": {
+    "employees": {
+      "businessName": "Employees",
+      "description": "People currently or formerly employed by the organization.",
+      "columns": {
+        "first_name": { "businessName": "First Name" },
+        "last_name": { "businessName": "Last Name" },
+        "email": { "businessName": "Email", "isPii": true, "sensitivityLevel": "Confidential" },
+        "ssn": {
+          "businessName": "National ID",
+          "isPii": true,
+          "sensitivityLevel": "Restricted",
+          "isVisible": false,
+          "description": "National identification number. Hidden from business users."
+        },
+        "phone": { "businessName": "Phone", "isPii": true, "sensitivityLevel": "Confidential" },
+        "hire_date": { "businessName": "Hire Date" },
+        "is_active": { "businessName": "Active" },
+        "department_id": { "isVisible": false, "description": "Technical foreign key, hidden from business users." },
+        "job_title_id": { "isVisible": false, "description": "Technical foreign key, hidden from business users." },
+        "manager_id": { "isVisible": false, "description": "Technical foreign key, hidden from business users." }
+      },
+      "derivedFields": [
+        {
+          "name": "full_name",
+          "businessName": "Full Name",
+          "expression": "first_name || ' ' || last_name",
+          "dataType": "text",
+          "description": "Employee full name, composed from first and last name."
+        },
+        {
+          "name": "tenure_years",
+          "businessName": "Tenure (Years)",
+          "expression": "date_part('year', age(hire_date))",
+          "dataType": "numeric",
+          "unit": "years",
+          "description": "Number of full years since the hire date."
+        }
+      ]
+    },
+    "salaries": {
+      "businessName": "Salaries",
+      "description": "Employee compensation records.",
+      "columns": {
+        "amount": {
+          "businessName": "Monthly Salary",
+          "isPii": true,
+          "sensitivityLevel": "Restricted",
+          "unit": "USD",
+          "description": "Monthly gross salary."
+        },
+        "currency": { "businessName": "Currency" },
+        "effective_date": { "businessName": "Effective Date" },
+        "employee_id": { "isVisible": false, "description": "Technical foreign key, hidden from business users." }
+      },
+      "derivedFields": [
+        {
+          "name": "annual_amount",
+          "businessName": "Annual Salary",
+          "expression": "amount * 12",
+          "dataType": "numeric",
+          "unit": "USD",
+          "sensitivityLevel": "Restricted",
+          "isPii": true,
+          "description": "Estimated annual salary (monthly amount x 12)."
+        }
+      ]
+    },
+    "departments": {
+      "businessName": "Departments",
+      "description": "Organizational units.",
+      "columns": {
+        "name": { "businessName": "Department Name" },
+        "location": { "businessName": "Location" },
+        "budget": { "businessName": "Annual Budget", "unit": "USD", "sensitivityLevel": "Confidential" }
+      }
+    },
+    "job_titles": {
+      "businessName": "Job Titles",
+      "description": "Catalog of roles and their seniority levels.",
+      "columns": {
+        "title": { "businessName": "Title" },
+        "level": { "businessName": "Seniority Level" }
+      }
+    }
+  }
+}

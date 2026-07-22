@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: semantic-db
+    environment:
+      POSTGRES_USER: semantic
+      POSTGRES_PASSWORD: semantic
+      POSTGRES_DB: semantic_demo
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      # Runs only on first initialization of an empty data volume.
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U semantic -d semantic_demo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: semantic-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # The container talks to the "db" service over the compose network.
+      ConnectionStrings__Default: "Host=db;Port=5432;Database=semantic_demo;Username=semantic;Password=semantic"
+      SemanticLayer__SourceSchema: "hr"
+      ASPNETCORE_URLS: "http://+:8080"
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: semantic-frontend
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+
+volumes:
+  db-data:

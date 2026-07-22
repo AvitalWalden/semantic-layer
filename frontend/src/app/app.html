@@ -1,0 +1,27 @@
+<mat-toolbar color="primary" class="app-toolbar">
+  <mat-icon class="brand-icon">layers</mat-icon>
+  <span class="brand">Semantic Layer Manager</span>
+  <span class="spacer"></span>
+  <span class="subtitle">HR Domain &middot; PostgreSQL</span>
+</mat-toolbar>
+
+<mat-sidenav-container class="app-container">
+  <mat-sidenav mode="side" opened class="app-sidenav">
+    <mat-nav-list>
+      @for (item of nav; track item.path) {
+        <a
+          mat-list-item
+          [routerLink]="item.path"
+          routerLinkActive="active-link"
+        >
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

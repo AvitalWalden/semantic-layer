@@ -1,0 +1,122 @@
+<div class="page">
+  <div class="page-header">
+    <a mat-button routerLink="/management"><mat-icon>arrow_back</mat-icon> Back</a>
+  </div>
+
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+
+  @if (entity(); as e) {
+    <mat-card class="section">
+      <mat-card-header>
+        <mat-card-title>{{ e.businessName }}</mat-card-title>
+        <mat-card-subtitle>
+          Mapped to <code>{{ e.physicalTableName }}</code>
+          @if (e.status === 'Orphaned') {
+            <span class="chip chip-orphaned">Orphaned</span>
+          }
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="form" class="entity-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Business Name</mat-label>
+            <input matInput formControlName="businessName" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="wide">
+            <mat-label>Description</mat-label>
+            <textarea matInput rows="2" formControlName="description"></textarea>
+          </mat-form-field>
+          <mat-slide-toggle formControlName="isVisible">Visible to business users</mat-slide-toggle>
+        </form>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-flat-button color="primary" [disabled]="form.invalid || saving()" (click)="saveEntity()">
+          <mat-icon>save</mat-icon> Save entity
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="section">
+      <mat-card-header>
+        <mat-card-title>Fields ({{ e.fields.length }})</mat-card-title>
+        <mat-card-subtitle>Physical columns and derived fields. Edit to manage business metadata.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <table mat-table [dataSource]="e.fields" class="full-width">
+          <ng-container matColumnDef="businessName">
+            <th mat-header-cell *matHeaderCellDef>Business Name</th>
+            <td mat-cell *matCellDef="let f">
+              <strong>{{ f.businessName }}</strong>
+              @if (f.isDerived) {
+                <mat-icon class="derived" matTooltip="Derived: {{ f.derivedExpression }}">functions</mat-icon>
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="physicalColumnName">
+            <th mat-header-cell *matHeaderCellDef>Physical Column</th>
+            <td mat-cell *matCellDef="let f">
+              @if (f.isDerived) { <span class="muted">(derived)</span> }
+              @else { <code>{{ f.physicalColumnName }}</code> }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let f"><span class="muted">{{ f.physicalDataType }}</span></td>
+          </ng-container>
+
+          <ng-container matColumnDef="visible">
+            <th mat-header-cell *matHeaderCellDef>Visible</th>
+            <td mat-cell *matCellDef="let f">
+              @if (f.isVisible) {
+                <mat-icon class="ok">visibility</mat-icon>
+              } @else {
+                <mat-icon class="muted">visibility_off</mat-icon>
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="pii">
+            <th mat-header-cell *matHeaderCellDef>PII</th>
+            <td mat-cell *matCellDef="let f">
+              @if (f.isPii) { <mat-icon class="warn" matTooltip="Personally identifiable">privacy_tip</mat-icon> }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sensitivity">
+            <th mat-header-cell *matHeaderCellDef>Sensitivity</th>
+            <td mat-cell *matCellDef="let f">
+              <span class="chip" [ngClass]="'sens-' + f.sensitivityLevel.toLowerCase()">{{ f.sensitivityLevel }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="source">
+            <th mat-header-cell *matHeaderCellDef>Source</th>
+            <td mat-cell *matCellDef="let f">
+              @if (f.isUserModified) {
+                <mat-icon class="edited" matTooltip="Manually edited (protected from syncs)">person</mat-icon>
+              } @else {
+                <span class="muted">auto</span>
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let f">
+              <button mat-icon-button color="primary" (click)="editField(f)" matTooltip="Edit field">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columns"></tr>
+          <tr mat-row *matRowDef="let row; columns: columns" [class.dim]="!row.isVisible"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

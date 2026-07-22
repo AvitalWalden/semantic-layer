@@ -1,0 +1,60 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Data Explorer</h1>
+    <p>Browse source data through the semantic layer: business names, only visible fields, and derived values.</p>
+  </div>
+
+  <mat-card class="selector-card">
+    <mat-card-content>
+      <mat-form-field appearance="outline" class="entity-select">
+        <mat-label>Business entity</mat-label>
+        <mat-select [(ngModel)]="selectedId" (selectionChange)="onEntityChange()">
+          @for (e of entities(); track e.id) {
+            <mat-option [value]="e.id">{{ e.businessName }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      @if (entities().length === 0) {
+        <span class="muted">No visible entities. Run a schema sync and make sure entities are visible.</span>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-content>
+      @if (loading()) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      }
+
+      @if (data(); as d) {
+        <div class="table-wrap">
+          <table mat-table [dataSource]="d.rows" class="full-width">
+            @for (col of displayedColumns(); track col) {
+              <ng-container [matColumnDef]="col">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ col }}
+                  @if (unit(col)) { <span class="unit">({{ unit(col) }})</span> }
+                  @if (isDerived(col)) {
+                    <mat-icon class="derived" matTooltip="Derived field">functions</mat-icon>
+                  }
+                </th>
+                <td mat-cell *matCellDef="let row">{{ format(row[col]) }}</td>
+              </ng-container>
+            }
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
+          </table>
+        </div>
+
+        <mat-paginator
+          [length]="d.totalRows"
+          [pageSize]="pageSize"
+          [pageIndex]="pageIndex"
+          [pageSizeOptions]="[5, 10, 25, 50]"
+          (page)="onPage($event)"
+        ></mat-paginator>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

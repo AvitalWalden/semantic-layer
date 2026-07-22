@@ -1,0 +1,22 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# Node / Angular
+node_modules/
+frontend/dist/
+frontend/.angular/
+npm-debug.log*
+
+# Env / OS
+.env
+.DS_Store
+Thumbs.db
+
+# Rider / VS Code
+.idea/
+.vscode/*
+!.vscode/extensions.json
