@@ -12,16 +12,11 @@ import {
   UpdateFieldDto,
 } from './models';
 
-/**
- * Typed gateway to the Semantic Layer REST API. The base path '/api' is proxied
- * to the backend in development and served by nginx in production.
- */
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly http = inject(HttpClient);
   private readonly base = '/api';
 
-  // ---- Semantic management ----
   getEntities(onlyVisible = false): Observable<EntityDto[]> {
     const params = new HttpParams().set('onlyVisible', onlyVisible);
     return this.http.get<EntityDto[]>(`${this.base}/semantic/entities`, { params });
@@ -39,7 +34,6 @@ export class ApiService {
     return this.http.put<FieldDto>(`${this.base}/semantic/fields/${id}`, dto);
   }
 
-  // ---- Sync ----
   syncSchema(): Observable<SyncResultDto> {
     return this.http.post<SyncResultDto>(`${this.base}/sync/schema`, {});
   }
@@ -55,7 +49,6 @@ export class ApiService {
     return this.http.get<SyncRunDto[]>(`${this.base}/sync/history`, { params });
   }
 
-  // ---- Data explorer ----
   getData(entityId: number, page: number, pageSize: number): Observable<DataResultDto> {
     const params = new HttpParams().set('page', page).set('pageSize', pageSize);
     return this.http.get<DataResultDto>(`${this.base}/data/${entityId}`, { params });

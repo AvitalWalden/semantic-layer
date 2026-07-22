@@ -9,12 +9,6 @@ using SemanticLayer.Infrastructure.Common;
 
 namespace SemanticLayer.Infrastructure.Data;
 
-/// <summary>
-/// Queries physical source data through the semantic layer: only visible, active
-/// fields are selected, physical columns are aliased to their business names, and
-/// derived fields are evaluated via their SQL expression. Identifiers are
-/// validated and quoted to prevent SQL injection.
-/// </summary>
 public class PostgresDataQueryService : IDataQueryService
 {
     private readonly ISemanticRepository _repo;
@@ -103,8 +97,6 @@ public class PostgresDataQueryService : IDataQueryService
         if (field.IsDerived)
         {
             var expr = field.DerivedExpression ?? string.Empty;
-            // Derived expressions come from the trusted metadata file, but we still
-            // reject statement terminators as a basic guard.
             if (expr.Contains(';'))
                 throw new InvalidOperationException($"Derived expression for '{field.PhysicalColumnName}' is not allowed.");
             return $"({expr}) AS {SqlIdentifier.Quote(field.PhysicalColumnName)}";
