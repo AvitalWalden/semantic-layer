@@ -41,9 +41,4 @@ public class SyncController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-
-    /// <summary>Returns the synchronization history (most recent first).</summary>
-    [HttpGet("history")]
-    public async Task<ActionResult<IReadOnlyList<SyncRunDto>>> GetHistory([FromQuery] int take = 50, CancellationToken ct = default)
-        => Ok(await _syncService.GetHistoryAsync(take, ct));
 }

@@ -7,7 +7,6 @@ import {
   EntityDto,
   FieldDto,
   SyncResultDto,
-  SyncRunDto,
   UpdateEntityDto,
   UpdateFieldDto,
 } from './models';
@@ -42,11 +41,6 @@ export class ApiService {
     const form = new FormData();
     form.append('file', file);
     return this.http.post<SyncResultDto>(`${this.base}/sync/metadata`, form);
-  }
-
-  getHistory(take = 50): Observable<SyncRunDto[]> {
-    const params = new HttpParams().set('take', take);
-    return this.http.get<SyncRunDto[]>(`${this.base}/sync/history`, { params });
   }
 
   getData(entityId: number, page: number, pageSize: number): Observable<DataResultDto> {

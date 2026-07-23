@@ -1,5 +1,28 @@
 .section {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  border-radius: 12px;
+}
+
+// Give the card header room and keep the subtitle from crowding the first
+// outlined field's floating label below it.
+:host ::ng-deep .section .mat-mdc-card-header {
+  padding: 20px 20px 0;
+}
+
+:host ::ng-deep .section .mat-mdc-card-title {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+:host ::ng-deep .section .mat-mdc-card-subtitle {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+:host ::ng-deep .section .mat-mdc-card-content {
+  padding: 20px;
 }
 
 .full-width {
@@ -9,12 +32,38 @@
 .entity-form {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
   max-width: 640px;
+  // Space so the first field's floating label never overlaps the subtitle.
+  margin-top: 12px;
 }
 
 .wide {
   width: 100%;
+}
+
+// Roomier table rows so text isn't cramped line-to-line.
+:host ::ng-deep table.full-width {
+  th.mat-mdc-header-cell {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #5b6b7b;
+  }
+
+  td.mat-mdc-cell,
+  th.mat-mdc-header-cell {
+    padding: 12px 12px;
+  }
+
+  .mat-mdc-row {
+    height: auto;
+    min-height: 52px;
+  }
+
+  td.mat-mdc-cell {
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
 }
 
 code {
@@ -47,10 +96,11 @@ tr.dim td {
 
 .chip {
   display: inline-block;
-  padding: 2px 10px;
+  padding: 3px 10px;
   border-radius: 12px;
   font-size: 12px;
   font-weight: 500;
+  line-height: 1.5;
 }
 .chip-orphaned {
   background: #fdecea;

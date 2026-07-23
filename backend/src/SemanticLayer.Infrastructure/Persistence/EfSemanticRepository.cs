@@ -53,8 +53,5 @@ public class EfSemanticRepository : ISemanticRepository
         await _db.SyncRuns.AddAsync(run, ct);
     }
 
-    public async Task<IReadOnlyList<SyncRun>> GetSyncRunsAsync(int take, CancellationToken ct = default) =>
-        await _db.SyncRuns.OrderByDescending(r => r.StartedAt).Take(take).ToListAsync(ct);
-
     public Task SaveChangesAsync(CancellationToken ct = default) => _db.SaveChangesAsync(ct);
 }

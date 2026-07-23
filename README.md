@@ -140,7 +140,6 @@ port 8080 (see `frontend/proxy.conf.json`).
 |--------|----------------------------------------|------------------------------------------|
 | POST   | `/api/sync/schema`                     | Non-destructive schema sync              |
 | POST   | `/api/sync/metadata`                   | Merge uploaded metadata file (multipart) |
-| GET    | `/api/sync/history`                    | Sync history                             |
 | GET    | `/api/semantic/entities`               | List entities (`?onlyVisible=true`)      |
 | GET    | `/api/semantic/entities/{id}`          | Entity with fields                       |
 | PUT    | `/api/semantic/entities/{id}`          | Update entity business attributes        |

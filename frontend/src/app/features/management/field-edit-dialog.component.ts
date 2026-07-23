@@ -77,6 +77,8 @@ import { FieldDto, SensitivityLevel, UpdateFieldDto } from '../../core/models';
         display: flex;
         flex-direction: column;
         min-width: 420px;
+        /* Space so the first field's floating label is not clipped by the dialog content edge. */
+        padding-top: 10px;
       }
       .row {
         display: flex;

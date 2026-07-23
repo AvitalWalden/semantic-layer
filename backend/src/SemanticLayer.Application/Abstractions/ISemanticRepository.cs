@@ -22,7 +22,5 @@ public interface ISemanticRepository
 
     Task AddSyncRunAsync(SyncRun run, CancellationToken ct = default);
 
-    Task<IReadOnlyList<SyncRun>> GetSyncRunsAsync(int take, CancellationToken ct = default);
-
     Task SaveChangesAsync(CancellationToken ct = default);
 }

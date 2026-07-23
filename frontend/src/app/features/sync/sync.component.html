@@ -5,98 +5,71 @@
   </div>
 
   <div class="cards">
-    <mat-card class="action-card">
-      <mat-card-header>
-        <mat-icon mat-card-avatar>sync</mat-icon>
-        <mat-card-title>Schema Sync</mat-card-title>
-        <mat-card-subtitle>Read the physical schema and reconcile entities/fields (non-destructive).</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p class="muted">
-          New tables/columns are added; disappeared ones are marked <em>Orphaned</em>; your manual edits are preserved.
+    <mat-card class="action-card" appearance="outlined">
+      <div class="card-top">
+        <div class="avatar avatar-sync"><mat-icon>sync</mat-icon></div>
+        <div class="card-heading">
+          <h2>Schema Sync</h2>
+          <p class="muted">Read the physical schema and reconcile entities/fields (non-destructive).</p>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <p class="hint">
+          New tables/columns are added, disappeared ones are marked <em>Orphaned</em>, and your manual edits are always
+          preserved.
         </p>
-        @if (syncing()) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-flat-button color="primary" [disabled]="syncing()" (click)="syncSchema()">
+      </div>
+
+      <div class="card-footer">
+        @if (syncing()) {
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        }
+        <button mat-flat-button color="primary" class="cta" [disabled]="syncing()" (click)="syncSchema()">
           <mat-icon>bolt</mat-icon> Run schema sync
         </button>
-      </mat-card-actions>
+      </div>
     </mat-card>
 
-    <mat-card class="action-card">
-      <mat-card-header>
-        <mat-icon mat-card-avatar>upload_file</mat-icon>
-        <mat-card-title>Metadata Import</mat-card-title>
-        <mat-card-subtitle>Merge business attributes and derived fields from a JSON file.</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p class="muted">Adds PII flags, sensitivity, units, business names and calculated fields not present in the DB.</p>
-        <div class="file-row">
-          <button mat-stroked-button (click)="fileInput.click()">
-            <mat-icon>attach_file</mat-icon> Choose file
-          </button>
-          <span class="file-name">{{ selectedFileName() ?? 'No file selected' }}</span>
+    <mat-card class="action-card" appearance="outlined">
+      <div class="card-top">
+        <div class="avatar avatar-meta"><mat-icon>upload_file</mat-icon></div>
+        <div class="card-heading">
+          <h2>Metadata Import</h2>
+          <p class="muted">Merge business attributes and derived fields from a JSON file.</p>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <p class="hint">Adds PII flags, sensitivity, units, business names and calculated fields not present in the DB.</p>
+
+        <div class="dropzone" [class.has-file]="selectedFileName()" (click)="fileInput.click()">
+          <mat-icon>{{ selectedFileName() ? 'description' : 'cloud_upload' }}</mat-icon>
+          <span class="file-name">{{ selectedFileName() ?? 'Click to choose a metadata JSON file' }}</span>
           <input #fileInput type="file" accept="application/json,.json" hidden (change)="onFileSelected($event)" />
         </div>
-        @if (merging()) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-flat-button color="primary" [disabled]="merging()" (click)="mergeMetadata()">
+      </div>
+
+      <div class="card-footer">
+        @if (merging()) {
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        }
+        <button mat-flat-button color="primary" class="cta" [disabled]="merging()" (click)="mergeMetadata()">
           <mat-icon>merge</mat-icon> Merge metadata
         </button>
-      </mat-card-actions>
+      </div>
     </mat-card>
   </div>
 
   @if (lastResult(); as r) {
-    <mat-card class="result-card">
-      <mat-card-content>
-        <div class="result">
-          <mat-icon class="ok">check_circle</mat-icon>
-          <div>
-            <strong>{{ r.type }} sync result</strong>
-            <p class="muted">{{ r.summary }}</p>
-          </div>
+    <mat-card class="result-card" appearance="outlined">
+      <div class="result">
+        <mat-icon class="ok">check_circle</mat-icon>
+        <div class="result-text">
+          <strong>{{ r.type }} sync completed</strong>
+          <p class="muted">{{ r.summary }}</p>
         </div>
-      </mat-card-content>
+      </div>
     </mat-card>
   }
-
-  <mat-card class="history-card">
-    <mat-card-header>
-      <mat-card-title>Sync History</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <table mat-table [dataSource]="history()" class="full-width">
-        <ng-container matColumnDef="type">
-          <th mat-header-cell *matHeaderCellDef>Type</th>
-          <td mat-cell *matCellDef="let r">
-            <span class="chip" [ngClass]="'type-' + r.type.toLowerCase()">{{ r.type }}</span>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="startedAt">
-          <th mat-header-cell *matHeaderCellDef>When</th>
-          <td mat-cell *matCellDef="let r">{{ r.startedAt | date: 'short' }}</td>
-        </ng-container>
-        <ng-container matColumnDef="counts">
-          <th mat-header-cell *matHeaderCellDef>Changes</th>
-          <td mat-cell *matCellDef="let r">
-            <span class="muted">E</span> +{{ r.entitiesAdded }}/-{{ r.entitiesRemoved }}
-            &nbsp;<span class="muted">F</span> +{{ r.fieldsAdded }}/~{{ r.fieldsUpdated }}/-{{ r.fieldsRemoved }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="summary">
-          <th mat-header-cell *matHeaderCellDef>Summary</th>
-          <td mat-cell *matCellDef="let r" class="summary-cell">{{ r.summary }}</td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="columns"></tr>
-        <tr mat-row *matRowDef="let row; columns: columns"></tr>
-      </table>
-      @if (history().length === 0) {
-        <p class="muted empty">No sync runs yet.</p>
-      }
-    </mat-card-content>
-  </mat-card>
 </div>

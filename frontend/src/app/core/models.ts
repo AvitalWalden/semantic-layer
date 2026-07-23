@@ -69,19 +69,6 @@ export interface SyncResultDto {
   summary: string;
 }
 
-export interface SyncRunDto {
-  id: number;
-  type: SyncType;
-  startedAt: string;
-  completedAt: string;
-  entitiesAdded: number;
-  entitiesRemoved: number;
-  fieldsAdded: number;
-  fieldsUpdated: number;
-  fieldsRemoved: number;
-  summary: string;
-}
-
 export interface DataColumnDto {
   businessName: string;
   unit?: string | null;

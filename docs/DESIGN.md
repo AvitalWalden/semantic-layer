@@ -258,6 +258,10 @@ LIMIT @limit OFFSET @offset;
 - **Richer derived fields** – a safe expression language with validation and preview.
 - **Change management** – diff/preview before applying a sync, and per-attribute
   provenance (which value came from schema vs. file vs. user).
+- **Sync history view** – each run is already persisted to `sync_runs` (type,
+  timestamps, change counts, summary) as an audit trail; surfacing it through an API
+  endpoint and a timeline/table in the UI was descoped to keep the focused scenario
+  tight.
 - **Performance** – cache introspection, add server-side filtering/sorting/search in
   the explorer.
 - **Automated tests** – unit tests for the sync/merge precedence rules and

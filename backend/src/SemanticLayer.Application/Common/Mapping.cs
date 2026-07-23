@@ -46,16 +46,4 @@ public static class Mapping
         f.Status,
         f.SortOrder,
         f.IsUserModified);
-
-    public static SyncRunDto ToDto(this SyncRun r) => new(
-        r.Id,
-        r.Type,
-        r.StartedAt,
-        r.CompletedAt,
-        r.EntitiesAdded,
-        r.EntitiesRemoved,
-        r.FieldsAdded,
-        r.FieldsUpdated,
-        r.FieldsRemoved,
-        r.Summary);
 }

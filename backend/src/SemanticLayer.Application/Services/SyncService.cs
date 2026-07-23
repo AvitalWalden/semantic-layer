@@ -173,10 +173,4 @@ public class SyncService : ISyncService
         Status = ObjectStatus.Active,
         SortOrder = col.OrdinalPosition
     };
-
-    public async Task<IReadOnlyList<SyncRunDto>> GetHistoryAsync(int take = 50, CancellationToken ct = default)
-    {
-        var runs = await _repo.GetSyncRunsAsync(take, ct);
-        return runs.Select(r => r.ToDto()).ToList();
-    }
 }

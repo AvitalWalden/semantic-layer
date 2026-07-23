@@ -15,7 +15,6 @@ public interface ISemanticService
 public interface ISyncService
 {
     Task<SyncResultDto> SyncSchemaAsync(CancellationToken ct = default);
-    Task<IReadOnlyList<SyncRunDto>> GetHistoryAsync(int take = 50, CancellationToken ct = default);
 }
 
 /// <summary>Merges an external metadata file into the semantic layer.</summary>
