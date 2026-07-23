@@ -2,11 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using SemanticLayer.Domain.Entities;
 
 namespace SemanticLayer.Infrastructure.Persistence;
-
-/// <summary>
-/// EF Core context for the semantic metadata store. All tables live in the
-/// dedicated "semantic" schema, separate from the physical source schema ("hr").
-/// </summary>
 public class SemanticDbContext : DbContext
 {
     public const string Schema = "semantic";

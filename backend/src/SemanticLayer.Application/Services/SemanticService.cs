@@ -30,7 +30,7 @@ public class SemanticService : ISemanticService
         entity.BusinessName = dto.BusinessName;
         entity.Description = dto.Description;
         entity.IsVisible = dto.IsVisible;
-        entity.IsUserModified = true; // user edits win over future syncs
+        entity.IsUserModified = true; 
         entity.UpdatedAt = DateTime.UtcNow;
 
         await _repo.SaveChangesAsync(ct);
@@ -49,7 +49,7 @@ public class SemanticService : ISemanticService
         field.SensitivityLevel = dto.SensitivityLevel;
         field.Unit = dto.Unit;
         field.DisplayFormat = dto.DisplayFormat;
-        field.IsUserModified = true; // user edits win over future syncs
+        field.IsUserModified = true; 
         field.UpdatedAt = DateTime.UtcNow;
 
         await _repo.SaveChangesAsync(ct);

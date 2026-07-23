@@ -2,10 +2,6 @@ using System.Text.Json.Serialization;
 
 namespace SemanticLayer.Application.Metadata;
 
-/// <summary>
-/// Strongly-typed representation of the external metadata file (metadata.json).
-/// Property names are matched case-insensitively when deserializing.
-/// </summary>
 public class MetadataFile
 {
     public string? Version { get; set; }
@@ -37,12 +33,10 @@ public class ColumnMetadata
 
 public class DerivedFieldMetadata
 {
-    /// <summary>Logical field name (mapping key within the entity).</summary>
     public string Name { get; set; } = string.Empty;
     public string? BusinessName { get; set; }
     public string? Description { get; set; }
 
-    /// <summary>SQL expression over the same table's columns.</summary>
     public string Expression { get; set; } = string.Empty;
 
     public string? DataType { get; set; }

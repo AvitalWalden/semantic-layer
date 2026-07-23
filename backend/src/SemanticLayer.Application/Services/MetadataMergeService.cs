@@ -7,13 +7,6 @@ using SemanticLayer.Domain.Enums;
 
 namespace SemanticLayer.Application.Services;
 
-/// <summary>
-/// Merges an external metadata file into the semantic layer. Enriches existing
-/// fields with attributes that do not exist in the database (PII, sensitivity,
-/// units, business names) and creates derived (calculated) fields.
-///
-/// Precedence: user-modified records are never overwritten by the merge.
-/// </summary>
 public class MetadataMergeService : IMetadataMergeService
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
@@ -52,7 +45,7 @@ public class MetadataMergeService : IMetadataMergeService
             if (!entitiesByName.TryGetValue(tableName, out var entity))
             {
                 skipped++;
-                continue; // metadata can only enrich tables that exist in the schema
+                continue; 
             }
 
             if (!entity.IsUserModified)

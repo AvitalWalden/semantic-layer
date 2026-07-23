@@ -9,11 +9,6 @@ using SemanticLayer.Domain.Enums;
 
 namespace SemanticLayer.Application.Services;
 
-/// <summary>
-/// Reconciles the semantic layer with the physical schema. The reconciliation is
-/// non-destructive: business edits are preserved, disappearing objects are marked
-/// Orphaned rather than deleted, and user-modified records are never overwritten.
-/// </summary>
 public class SyncService : ISyncService
 {
     private readonly ISemanticRepository _repo;
@@ -72,7 +67,6 @@ public class SyncService : ISyncService
                 continue;
             }
 
-            // Existing entity: refresh structural facts, preserve business edits.
             entity.Status = ObjectStatus.Active;
             entity.PrimaryKeyColumn = pkColumn;
             entity.UpdatedAt = DateTime.UtcNow;
@@ -83,7 +77,6 @@ public class SyncService : ISyncService
             fieldsRemoved += removed;
         }
 
-        // Entities whose physical table disappeared -> Orphaned (kept, not deleted).
         foreach (var entity in existingEntities)
         {
             if (!physicalTableNames.Contains(entity.PhysicalTableName) && entity.Status != ObjectStatus.Orphaned)
@@ -141,7 +134,6 @@ public class SyncService : ISyncService
             field.Status = ObjectStatus.Active;
             field.SortOrder = col.OrdinalPosition;
 
-            // Structural type is always refreshed; it is not a business edit.
             if (!string.Equals(field.PhysicalDataType, col.DataType, StringComparison.OrdinalIgnoreCase))
             {
                 field.PhysicalDataType = col.DataType;
@@ -150,7 +142,6 @@ public class SyncService : ISyncService
             }
         }
 
-        // Mapped fields whose column disappeared -> Orphaned (derived fields untouched).
         foreach (var field in entity.Fields.Where(f => !f.IsDerived))
         {
             if (!physicalColumnNames.Contains(field.PhysicalColumnName) && field.Status != ObjectStatus.Orphaned)

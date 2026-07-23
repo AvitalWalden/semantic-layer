@@ -3,7 +3,7 @@ using SemanticLayer.Domain.Entities;
 
 namespace SemanticLayer.Application.Common;
 
-/// <summary>Maps domain entities to DTOs.</summary>
+
 public static class Mapping
 {
     public static EntityDto ToDto(this SemanticEntity e) => new(
