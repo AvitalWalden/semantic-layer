@@ -21,7 +21,6 @@ public static class StartupInitializer
 
         var db = sp.GetRequiredService<SemanticDbContext>();
 
-        // Retry: the database container may still be starting up.
         await WaitForDatabaseAsync(db, logger);
 
         logger.LogInformation("Applying EF Core migrations...");
